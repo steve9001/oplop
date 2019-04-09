@@ -1,0 +1,7 @@
+[package]
+name = "oplop"
+version = "0.1.0"
+authors = ["Steve Masterman <steve@vermonster.com>"]
+edition = "2018"
+
+[dependencies]
