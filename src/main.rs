@@ -1,3 +1,7 @@
+use std::env;
+use oplop;
+
 fn main() {
-    println!("Hello, world!");
+    let args: Vec<String> = env::args().collect();
+    oplop::run(&args[1..]);
 }
