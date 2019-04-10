@@ -1,3 +1,5 @@
+extern crate rpassword;
+
 fn print_usage() {
     let usage = "Generate a unique password for each account using a unique nickname and a master password
 
@@ -11,11 +13,19 @@ Options:
     println!("{}", usage);
 }
 
+fn oplop() {
+    println!("normal oplop");
+}
+
+fn oplop_new() {
+    println!("new oplop");
+}
+
 pub fn run(args: &[String]) {
     if args.len() == 0 {
-        println!("normal oplop");
+        oplop();
     } else if args.len() == 1 && args[0] == "new" {
-        println!("new oplop");
+        oplop_new();
     } else {
         print_usage();
     }
