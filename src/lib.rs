@@ -1,4 +1,8 @@
 extern crate rpassword;
+extern crate clipboard;
+
+use clipboard::ClipboardProvider;
+use clipboard::ClipboardContext;
 
 fn print_usage() {
     let usage = "Generate a unique password for each account using a unique nickname and a master password
@@ -13,11 +17,25 @@ Options:
     println!("{}", usage);
 }
 
+
+fn set_clipboard(text: &str) {
+    let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
+    ctx.set_contents(text.to_owned()).expect("Error copying to clipboard.");
+}
+
 fn oplop() {
+    //request nickname
+    //request master password
+    set_clipboard("normal oplop");
     println!("normal oplop");
 }
 
 fn oplop_new() {
+    //request nickname
+    //request master password
+    //confirm nickname
+    //confirm master password
+    set_clipboard("new oplop");
     println!("new oplop");
 }
 
