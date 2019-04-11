@@ -1,3 +1,6 @@
+use md5;
+use std::process;
+
 extern crate rpassword;
 extern crate clipboard;
 
@@ -21,6 +24,7 @@ Options:
 fn set_clipboard(text: &str) {
     let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
     ctx.set_contents(text.to_owned()).expect("Error copying to clipboard.");
+    println!("Account password copied to clipboard!");
 }
 
 fn oplop() {
@@ -31,12 +35,23 @@ fn oplop() {
 }
 
 fn oplop_new() {
-    //request nickname
-    //request master password
-    //confirm nickname
-    //confirm master password
-    set_clipboard("new oplop");
-    println!("new oplop");
+    let nickname = rpassword::read_password_from_tty(Some("Enter account nickname: ")).unwrap();
+    let password = rpassword::read_password_from_tty(Some("Enter master password:")).unwrap();
+
+    let confirm_nickname = rpassword::read_password_from_tty(Some("Confirm account nickname: ")).unwrap();
+    if !(confirm_nickname == nickname) {
+        eprintln!("nicknames don't match");
+        process::exit(1);
+    }
+
+    let confirm_password = rpassword::read_password_from_tty(Some("Confirm master password:")).unwrap();
+    if !(confirm_nickname == nickname) {
+        eprintln!("nicknames don't match");
+        process::exit(1);
+    }
+
+    let hash = format!("oplop{}{}", nickname, password);
+    set_clipboard(&hash);
 }
 
 pub fn run(args: &[String]) {
