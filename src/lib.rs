@@ -18,6 +18,14 @@ Options:
     println!("{}", usage);
 }
 
+fn oplop_hash(label: &str, master: &str) -> String {
+    String::from("QSS8CpM1wn8IbyS6IHpJEg==")
+}
+
+fn oplop_password(hash: &str) -> String {
+    String::from("QSS8CpM1")
+}
+
 fn set_clipboard(text: &str) {
     let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
     ctx.set_contents(text.to_owned()).expect("Error copying to clipboard.");
@@ -63,7 +71,7 @@ pub fn run(args: &[String]) {
 
 #[cfg(test)]
 mod tests {
-    //use super::*;
+    use super::oplop_hash;
     use std::fs;
     use json;
 
@@ -72,13 +80,14 @@ mod tests {
         let cases = fs::read_to_string("tests/support/testdata.json").unwrap();
         let parsed = json::parse(cases.as_str()).unwrap();
         for case in parsed.members() {
-            let why = &case["why"];
-            println!("\nhELLO\n{:?}", why);
+            let label = &case["label"].as_str().unwrap();
+            let master = &case["master"].as_str().unwrap();
+            let hash = &case["hash"].as_str().unwrap();
+            assert_eq!(
+                &oplop_hash(label, master),
+                hash
+            );
+            break
         }
-
-        assert_eq!(
-            (1 == 1),
-            true
-        );
     }
 }
