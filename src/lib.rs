@@ -70,8 +70,12 @@ mod tests {
     #[test]
     fn example() {
         let cases = fs::read_to_string("tests/support/testdata.json").unwrap();
-        let parsed = json::parse(cases.as_str());
-        eprintln!("{:?}", parsed);
+        let parsed = json::parse(cases.as_str()).unwrap();
+        for case in parsed.members() {
+            let why = &case["why"];
+            println!("\nhELLO\n{:?}", why);
+        }
+
         assert_eq!(
             (1 == 1),
             true
