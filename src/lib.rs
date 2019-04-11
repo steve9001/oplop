@@ -24,10 +24,10 @@ fn set_clipboard(text: &str) {
 }
 
 fn oplop() {
-    //request nickname
-    //request master password
-    set_clipboard("normal oplop");
-    println!("normal oplop");
+    let nickname = rpassword::read_password_from_tty(Some("Enter account nickname: ")).unwrap();
+    let password = rpassword::read_password_from_tty(Some("Enter master password:")).unwrap();
+    let hash = format!("oplop{}{}", nickname, password);
+    set_clipboard(&hash);
 }
 
 fn oplop_new() {
