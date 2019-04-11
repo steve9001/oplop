@@ -63,10 +63,15 @@ pub fn run(args: &[String]) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    //use super::*;
+    use std::fs;
+    use json;
 
     #[test]
     fn example() {
+        let cases = fs::read_to_string("tests/support/testdata.json").unwrap();
+        let parsed = json::parse(cases.as_str());
+        eprintln!("{:?}", parsed);
         assert_eq!(
             (1 == 1),
             true
