@@ -5,6 +5,7 @@ use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
 use md5;
 use rpassword::read_password_from_tty;
+use hex;
 
 fn print_usage() {
     let usage = "Generate a unique password for each account using a unique nickname and a master password
@@ -24,7 +25,10 @@ fn oplop_hash(label: &str, master: &str) -> String {
     println!("input: {}", input);
     //let digest = md5::compute(format!("{:b}{:b}", master, label));
     let digest = md5::compute(input);
-    println!("digest: {:?}", *digest);
+    let fdigest = format!("{:?}", *digest);
+    println!("fdigest: {}", fdigest);
+    let digest2 = hex::decode(fdigest);
+    println!("digest2: {:?}", digest2);
     let ddigest = format!("{:?}", digest);
     println!("ddigest: {}", ddigest);
     let digest = base64::encode_config(&format!("{:?}", digest), base64::URL_SAFE);
