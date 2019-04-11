@@ -1,8 +1,9 @@
 use std::process;
 
+use base64;
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
-//use md5;
+use md5;
 use rpassword::read_password_from_tty;
 
 fn print_usage() {
@@ -19,7 +20,17 @@ Options:
 }
 
 fn oplop_hash(label: &str, master: &str) -> String {
-    String::from("QSS8CpM1wn8IbyS6IHpJEg==")
+    let input = format!("{}{}", master, label);
+    println!("input: {}", input);
+    //let digest = md5::compute(format!("{:b}{:b}", master, label));
+    let digest = md5::compute(input);
+    println!("digest: {:?}", *digest);
+    let ddigest = format!("{:?}", digest);
+    println!("ddigest: {}", ddigest);
+    let digest = base64::encode_config(&format!("{:?}", digest), base64::URL_SAFE);
+    println!("b64digest: {}", ddigest);
+    String::from(format!("{:?}", digest))
+    //String::from("QSS8CpM1wn8IbyS6IHpJEg==")
 }
 
 fn oplop_password(hash: &str) -> String {
