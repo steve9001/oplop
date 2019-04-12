@@ -53,6 +53,8 @@ fn oplop_hash(label: &str, master: &str) -> String {
     let se = base64::encode_config(&s, base64::URL_SAFE);
     println!("vec_of_chars se: {}", se);
 
+    let h1 = hex::decode("4124bc0a9335c27f086f24ba207a4912").unwrap();
+    println!("h1: {:?}", h1);
 
 
     //let digest3 = str::from_utf8(&*digest).unwrap();
