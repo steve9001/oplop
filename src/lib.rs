@@ -8,6 +8,7 @@ use base64;
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
 use md5;
+use regex::Regex;
 use rpassword::read_password_from_tty;
 
 fn print_usage() {
@@ -30,7 +31,18 @@ fn oplop_hash(label: &str, master: &str) -> String {
 }
 
 fn oplop_password(hash: &str) -> String {
-    String::from("QSS8CpM1")
+    let re = Regex::new(r"\d+").unwrap();
+    match re.find(hash) {
+        Some(m) => {
+            if m.start() < 8 {
+                hash[0..8].to_owned()
+            } else {
+                let prefix_len = m.end() - m.start();
+                m.as_str().to_owned() + &hash[..8-prefix_len]
+            }
+        }
+        None => "1".to_owned() + &hash[..7]
+    }
 }
 
 fn set_clipboard(text: &str) {
@@ -99,7 +111,6 @@ mod tests {
                 &oplop_password(hash),
                 password
             );
-            //break
         }
     }
 }
