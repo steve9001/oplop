@@ -9,7 +9,6 @@ use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
 use md5;
 use rpassword::read_password_from_tty;
-use hex;
 
 fn print_usage() {
     let usage = "Generate a unique password for each account using a unique nickname and a master password
@@ -79,7 +78,7 @@ pub fn run(args: &[String]) {
 
 #[cfg(test)]
 mod tests {
-    use super::oplop_hash;
+    use super::{oplop_hash, oplop_password};
     use std::fs;
     use json;
 
@@ -91,9 +90,14 @@ mod tests {
             let label = &case["label"].as_str().unwrap();
             let master = &case["master"].as_str().unwrap();
             let hash = &case["hash"].as_str().unwrap();
+            let password = &case["password"].as_str().unwrap();
             assert_eq!(
                 &oplop_hash(label, master),
                 hash
+            );
+            assert_eq!(
+                &oplop_password(hash),
+                password
             );
             //break
         }
