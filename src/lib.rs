@@ -1,15 +1,9 @@
-#![allow(dead_code)]
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-
 use std::process;
 
-use base64;
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
-use md5;
-use regex::Regex;
 use rpassword::read_password_from_tty;
+mod algorithm;
 
 fn print_usage() {
     let usage = "Generate a unique password for each account using a unique nickname and a master password
@@ -24,26 +18,6 @@ Options:
     println!("{}", usage);
 }
 
-fn oplop_hash(label: &str, master: &str) -> String {
-    let digest = md5::compute(format!("{}{}", master, label));
-    base64::encode_config(&*digest, base64::URL_SAFE)
-}
-
-fn oplop_password(hash: &str) -> String {
-    let re = Regex::new(r"\d+").unwrap();
-    match re.find(hash) {
-        Some(m) => {
-            if m.start() < 8 {
-                hash[0..8].to_owned()
-            } else {
-                let prefix_len = m.end() - m.start();
-                m.as_str().to_owned() + &hash[..8-prefix_len]
-            }
-        }
-        None => "1".to_owned() + &hash[..7]
-    }
-}
-
 fn set_clipboard(text: &str) {
     let mut ctx: ClipboardContext = ClipboardProvider::new().unwrap();
     ctx.set_contents(text.to_owned()).expect("Error copying to clipboard.");
@@ -53,8 +27,7 @@ fn set_clipboard(text: &str) {
 fn oplop() {
     let nickname = read_password_from_tty(Some("Enter account nickname: ")).unwrap();
     let password = read_password_from_tty(Some("Enter master password:")).unwrap();
-    let hash = oplop_hash(&nickname, &password);
-    let password = oplop_password(&hash);
+    let password = algorithm::get_password(&nickname, &password);
     set_clipboard(&password);
 }
 
@@ -74,8 +47,7 @@ fn oplop_new() {
         process::exit(1);
     }
 
-    let hash = oplop_hash(&nickname, &password);
-    let password = oplop_password(&hash);
+    let password = algorithm::get_password(&nickname, &password);
     set_clipboard(&password);
 }
 
@@ -86,32 +58,5 @@ pub fn run(args: &[String]) {
         oplop_new();
     } else {
         print_usage();
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{oplop_hash, oplop_password};
-    use std::fs;
-    use json;
-
-    #[test]
-    fn example() {
-        let cases = fs::read_to_string("tests/support/testdata.json").unwrap();
-        let parsed = json::parse(cases.as_str()).unwrap();
-        for case in parsed.members() {
-            let label = &case["label"].as_str().unwrap();
-            let master = &case["master"].as_str().unwrap();
-            let hash = &case["hash"].as_str().unwrap();
-            let password = &case["password"].as_str().unwrap();
-            assert_eq!(
-                &oplop_hash(label, master),
-                hash
-            );
-            assert_eq!(
-                &oplop_password(hash),
-                password
-            );
-        }
     }
 }
