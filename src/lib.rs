@@ -26,48 +26,8 @@ Options:
 
 use std::str;
 fn oplop_hash(label: &str, master: &str) -> String {
-    //let foo = b'\\xbbd\\x9c\\x83\\xdd\\x1e\\xa5\\xc9\\xd9\\xde\\xc9\\xa1\\x8d\\xf0\\xff\\xe9';
-    //println!("foo {}", foo);
-    let input = format!("{}{}", master, label);
-    println!("input: {}", input);
-    //let digest = md5::compute(format!("{:b}{:b}", master, label));
-    let digest = md5::compute(input);
-    let fdigest = format!("{:?}", *digest);
-    println!("fdigest: {}", fdigest);
-    //let digest2 = hex::decode(*digest).unwrap();
-    //println!("digest2: {:x}", digest2);
-
-    //let digest2a = String::from_utf8((&*digest).to_vec());
-    //println!("digest2a: {:?}", digest2a);
-
-    //let vec_of_chars: Vec<char> = *digest.iter().map(|byte: &u8| *byte as char).collect();
-    //println!("vec_of_chars: {:?}", vec_of_chars);
-
-
-    let d = [65, 36, 188, 10, 147, 53, 194, 127, 8, 111, 36, 186, 32, 122, 73, 18];
-
-    let vec_of_chars: Vec<char> = d.iter().map(|byte: &u8| *byte as char).collect();
-    println!("vec_of_chars: {:?}", vec_of_chars);
-    let s: String = vec_of_chars.iter().collect();
-    println!("vec_of_chars_s: {:?}", s);
-    let se = base64::encode_config(&s, base64::URL_SAFE);
-    println!("vec_of_chars se: {}", se);
-
-    let ve = base64::encode_config(&vec_of_chars, base64::URL_SAFE);
-    println!("vec_of_chars ve: {}", ve);
-
-    let h1 = hex::decode("4124bc0a9335c27f086f24ba207a4912").unwrap();
-    println!("h1: {:?}", h1);
-
-
-    //let digest3 = str::from_utf8(&*digest).unwrap();
-    //println!("digest3: {:?}", digest3);
-    //let ddigest = format!("{:?}", digest);
-    //println!("ddigest: {}", ddigest);
-    //let digest = base64::encode_config(&format!("{:?}", digest), base64::URL_SAFE);
-    //println!("b64digest: {}", ddigest);
-    String::from(format!("{:?}", digest))
-    //String::from("QSS8CpM1wn8IbyS6IHpJEg==")
+    let digest = md5::compute(format!("{}{}", master, label));
+    base64::encode_config(&*digest, base64::URL_SAFE)
 }
 
 fn oplop_password(hash: &str) -> String {
@@ -135,7 +95,7 @@ mod tests {
                 &oplop_hash(label, master),
                 hash
             );
-            break
+            //break
         }
     }
 }
