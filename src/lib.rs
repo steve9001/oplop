@@ -54,8 +54,9 @@ fn set_clipboard(text: &str) {
 fn oplop() {
     let nickname = read_password_from_tty(Some("Enter account nickname: ")).unwrap();
     let password = read_password_from_tty(Some("Enter master password:")).unwrap();
-    let hash = format!("oplop{}{}", nickname, password);
-    set_clipboard(&hash);
+    let hash = oplop_hash(&nickname, &password);
+    let password = oplop_password(&hash);
+    set_clipboard(&password);
 }
 
 fn oplop_new() {
@@ -74,8 +75,9 @@ fn oplop_new() {
         process::exit(1);
     }
 
-    let hash = format!("oplop{}{}", nickname, password);
-    set_clipboard(&hash);
+    let hash = oplop_hash(&nickname, &password);
+    let password = oplop_password(&hash);
+    set_clipboard(&password);
 }
 
 pub fn run(args: &[String]) {
