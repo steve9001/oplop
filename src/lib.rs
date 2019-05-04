@@ -3,7 +3,8 @@ use std::process;
 use clipboard::ClipboardProvider;
 use clipboard::ClipboardContext;
 use rpassword::read_password_from_tty;
-mod algorithm;
+//mod algorithm;
+mod oplop;
 
 fn print_usage() {
     let usage = "Generate a unique password for each account using a unique nickname and a master password
@@ -27,7 +28,7 @@ fn set_clipboard(text: &str) {
 fn oplop() {
     let nickname = read_password_from_tty(Some("Enter account nickname: ")).unwrap();
     let password = read_password_from_tty(Some("Enter master password:")).unwrap();
-    let password = algorithm::get_password(&nickname, &password);
+    let password = oplop::get_password(&nickname, &password);
     set_clipboard(&password);
 }
 
@@ -47,7 +48,7 @@ fn oplop_new() {
         process::exit(1);
     }
 
-    let password = algorithm::get_password(&nickname, &password);
+    let password = oplop::get_password(&nickname, &password);
     set_clipboard(&password);
 }
 
