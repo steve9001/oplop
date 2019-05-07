@@ -10,18 +10,26 @@
 Features:
 
 - 12 character length
-- guarantee upper, lower, digit, symbol, with minimal loss of entropy
-- replace md5 with bcrypt
-- use SHA-256 for a pseudo-random number generator and to normalize inputs
+- guarantee upper, lower, digit and symbol for password policy
+- replace md5 with bcrypt, targeting between 0.1 to 1 second compute time
+
+//- acceptable entropy to enforce password policy constraints
+
+//- use SHA-256 for a pseudo-random number generator and to normalize inputs
 
 Steps:
 
 - compute the bcrypt digest from the nickname and master password
 - start with the first 12 characters of the bcrypt digest
-- replace a character with a random uppercase
-- replace a different character with a random lowercase
-- replace a different character with a random digit
-- replace a different character with a random symbol
+- replace a random character with a random uppercase
+- replace a different random character with a random lowercase
+- replace a different random character with a random digit
+- replace a different random character with a random symbol
+
+# Note on choosing random values
+
+A simple pseudo-random number generator (PRNG) seeded with bytes from the bcrypt output is used to enforce the password policy constraints.
+The implementation is demonstrated to have a uniform distribution adequate for our purposes.
 
 # Use of SHA-256 for PRNG
 
@@ -81,3 +89,5 @@ https://github.com/brettcannon/oplop
 https://crypto.stackexchange.com/questions/3489/do-md5s-weaknesses-affect-oplop
 http://www.cs.utexas.edu/~bwaters/publications/papers/www2005.pdf
 https://people.csail.mit.edu/rivest/sampler.py
+https://gist.github.com/blixt/f17b47c62508be59987b
+
