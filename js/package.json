@@ -1,0 +1,11 @@
+{
+  "name": "lib-oplop2",
+  "version": "0.0.1",
+  "description": "oplop2 algorithm",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
