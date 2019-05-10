@@ -11,11 +11,14 @@ Features:
 
 - 12 character length
 - guarantee upper, lower, digit and symbol for password policy
-- replace md5 with bcrypt, targeting between 0.1 to 1 second compute time
+- replace md5 with PBKDF2, bcrypt, scrypt, or Argon2
+- same user experience as v1, except for a small delay
 
-//- acceptable entropy to enforce password policy constraints
-
-//- use SHA-256 for a pseudo-random number generator and to normalize inputs
+- PBKDF2 with HMAC-SHA-256
+ - widespread standardized support in Ruby, JS, Python
+- bcrypt
+- scrypt
+- Argon2
 
 Steps:
 
@@ -31,18 +34,7 @@ Steps:
 A simple pseudo-random number generator (PRNG) seeded with bytes from the bcrypt output is used to enforce the password policy constraints.
 The implementation is demonstrated to have a uniform distribution adequate for our purposes.
 
-# Use of SHA-256 for PRNG
-
-At several points in the algorithm it is necessary to choose a random value within certain constraints.
-SHA-256 is ideal for this purpose, because it is fast to compute and its output is effectively random.
-
-The first random value that is required will be derived from the hash of the bcrypt output.
-Each subsequent random value will be derived from the hash of the previous hash.
-That is, for each step where a hash is computed to provide a random value,
-the hash value will be used both to derive the random value required for that step, 
-and as the hash input for the next step that requires a random value.
-
-# Note on entropy
+# Note on password policy constraints
 
 For a simple way to satisfy the password policy constraints without compromising entropy,
 the output of bcrypt will have four different random characters replaces with random uppercase, lowercase, digit, and symbol.
@@ -50,8 +42,6 @@ The symbol set will avoid characters that might not be widely supported, such as
 
 
 # Process
-
-// ULDS - the requirement for upper, lower, digit, symbol characers
 
 let nickname, master = user_provided_inputs()
 
@@ -82,7 +72,8 @@ for random digit convert b[14] into integer and mod 10
 # Not proposed for Oplop v2
 
 - Anything that requires remembering or recording additional information for each nickname, such as ability to specify a length
-- Characters that are not easily input on a keyboard or that might be frequently 
+- Characters that are not easily input on a keyboard or that might be disallowed by poorly-implemented systems
+
 # References
 
 https://github.com/brettcannon/oplop
