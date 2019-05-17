@@ -27,7 +27,7 @@ I'd be interested in any comments on the plan, and if you'd rather it not be ass
 # Proposal for future upgrades
 
 As an alternative to being a one-time update of the algorithm, this could be the start of a sequence of updates.
-For example, using a hash function such as bcrypt with tunable difficulty parameters will require fixing the values of those parameters
+For example, using a hash function such as bcrypt with tunable difficulty parameters will require fixing the values of those parameters,
 with all implementations using the same values. The purpose of those parameters is to allow increasing difficulty in response to Moore's law or whatever. A future update of the Oplop algorithm could include adjustments to those parameters.
 
 A standard upgrage workflow that does not excessively burden the user experience could be used repeatedly.
