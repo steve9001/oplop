@@ -1,29 +1,58 @@
-I've been working on an update of the Oplop algorithm, tentatively calling it Oplop v2.
-The intent is to improve the generated passwords to be adequate for several years, the way Oplop v1 has been.
-Implementations can support both versions to facilitate user migration, and new users should start with v2.
+I've been working on an update of the Oplop algorithm, tentatively calling it either Oplop 2 or Oplop 2019 (more on that below).
+The intent is to improve the generated passwords to be adequate for several years, the way Oplop 1 has been.
+Implementations can support both versions to facilitate user migration, and new users should start with the newest version.
 
 I'd be interested in any comments on the plan, and if you'd rather it not be associated with Oplop then let me know.
 
-# Weaknesses of Oplop v1 algorithm
+# Strengths of Oplop v1
+
+- reasonably secure unique password for each account
+- mentally scalable and sustainable for user
+- no reliance on third party application or storage
+
+# Weaknesses of Oplop v1
 
 - 8 character length is too short
 - does not guarantee upper, lower, symbol
 - method of guaranteeing digit is problematic
 - use of MD5 is distracting/not best practice/vulnerable to brute force of master password
 
-# Proposed Oplop v2 algorithm
+# Proposed Oplop v2
 
+- preserve the user experience of v1
 - 12 character length
 - guarantee upper, lower, digit and symbol for password policy
-- replace md5 with either SHA-256 or PBKDF2
-- same user experience as v1, except for a possible delay depending on hashing algorithm
+- replace md5 with a better key derivation function such as PBKDF2 or bcrypt
 
+# Proposal for future upgrades
+
+As an alternative to being a one-time update of the algorithm, this could be the start of a sequence of updates.
+For example, using a hash function such as bcrypt with tunable difficulty parameters will require fixing the values of those parameters
+with all implementations using the same values. The purpose of those parameters is to allow increasing difficulty in response to Moore's law or whatever. A future update of the Oplop algorithm could include those adjustments.
+A standard upgrage workflow that does not excessively burden the user experience could be used repeatedly.
+So for example this proposed update could be called Oplop 2019, and use bcrypt with certain parameter values.
+The next update might be Oplop 2024 using a different parameters or a different hashing algorithm, and maybe produce longer passwords with
+more permitted characters in them.
+Users can fairly easily recall that they have migrate everything from Oplop v1 to Oplop 2019, or are in the process of migrating from Oplop 2019 to Oplop 2024.
+
+# Choosing a new hashing function
+
+PBKDF2, bcrypt, scrypt, and Argon2 all seem to be reasonable candidates from a security perspective. Possibly a more important consideration
+is the availability and quality of implementations across many programming languages, including the ease of using them in an Oplop implementation.
+The older and more established hash functions such as PBKDF2 seem to score better in those respects.
+
+
+
+
+Using
+# 
 # Not proposed for Oplop v2
 
 - Anything that requires remembering or recording additional information for each nickname, such as ability to specify a length or salt
 - Characters that are not easily input on a keyboard or that might be disallowed by poorly-implemented systems
 
 # Note on hashing algorithm
+# SHA256 vs PBKDF2
 
 Because of the user experience of the Oplop system, the benefits of using a proper password hashing algorithm are diminished.
 A per-user salt cannot be used without breaking one of the main benefits 
