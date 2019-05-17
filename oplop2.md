@@ -1,5 +1,5 @@
-I've been working on an update of the Oplop algorithm, tentatively calling it either Oplop 2 or Oplop 2019 (more on that below).
-The intent is to improve the generated passwords to be adequate for several years, the way Oplop 1 has been.
+I've been working on an update of the Oplop algorithm, tentatively calling it either Oplop v2 or Oplop 2019 (more on that below).
+The intent is to improve the generated passwords to be adequate for several years, the way Oplop v1 has been.
 Implementations can support both versions to facilitate user migration, and new users should start with the newest version.
 
 I'd be interested in any comments on the plan, and if you'd rather it not be associated with Oplop then let me know.
@@ -15,7 +15,7 @@ I'd be interested in any comments on the plan, and if you'd rather it not be ass
 - 8 character length is too short
 - does not guarantee upper, lower, symbol
 - method of guaranteeing digit is problematic
-- use of MD5 is distracting/not best practice/vulnerable to brute force of master password
+- use of MD5 is distracting/not best practice/potentially vulnerable to brute force
 
 # Proposed Oplop v2
 
@@ -28,12 +28,13 @@ I'd be interested in any comments on the plan, and if you'd rather it not be ass
 
 As an alternative to being a one-time update of the algorithm, this could be the start of a sequence of updates.
 For example, using a hash function such as bcrypt with tunable difficulty parameters will require fixing the values of those parameters
-with all implementations using the same values. The purpose of those parameters is to allow increasing difficulty in response to Moore's law or whatever. A future update of the Oplop algorithm could include those adjustments.
+with all implementations using the same values. The purpose of those parameters is to allow increasing difficulty in response to Moore's law or whatever. A future update of the Oplop algorithm could include adjustments to those parameters.
+
 A standard upgrage workflow that does not excessively burden the user experience could be used repeatedly.
-So for example this proposed update could be called Oplop 2019, and use bcrypt with certain parameter values.
-The next update might be Oplop 2024 using a different parameters or a different hashing algorithm, and maybe produce longer passwords with
-more permitted characters in them.
-Users can fairly easily recall that they have migrate everything from Oplop v1 to Oplop 2019, or are in the process of migrating from Oplop 2019 to Oplop 2024.
+So for example today's proposed update could be called Oplop 2019, and use bcrypt with certain parameter values.
+The next update might be Oplop 2024 using different parameters or a different hashing algorithm, and maybe also produce longer passwords with
+more permitted characters in them. These can be decided in the future based on what makes sense at that time.
+Users can fairly easily recall e.g., that they have migrated everything from Oplop v1 to Oplop 2019, or that are in the process of migrating from Oplop 2019 to Oplop 2024.
 
 # Choosing a new hashing function
 
@@ -41,44 +42,13 @@ PBKDF2, bcrypt, scrypt, and Argon2 all seem to be reasonable candidates from a s
 is the availability and quality of implementations across many programming languages, including the ease of using them in an Oplop implementation.
 The older and more established hash functions such as PBKDF2 seem to score better in those respects.
 
+# Choosing random values
 
+A simple pseudo-random number generator (PRNG) seeded with bytes from the digest is used to enforce the password policy constraints.
+The implementation is demonstrated to have a uniform distribution adequate for our purposes.
+https://gist.github.com/blixt/f17b47c62508be59987b
 
-
-Using
-# 
-# Not proposed for Oplop v2
-
-- Anything that requires remembering or recording additional information for each nickname, such as ability to specify a length or salt
-- Characters that are not easily input on a keyboard or that might be disallowed by poorly-implemented systems
-
-# Note on hashing algorithm
-# SHA256 vs PBKDF2
-
-Because of the user experience of the Oplop system, the benefits of using a proper password hashing algorithm are diminished.
-A per-user salt cannot be used without breaking one of the main benefits 
-PBKDF2, bcrypt, scrypt, and Argon2 all have parameters that allow tuning the difficulty to thwart brute force attacks.
-Parameter values that 
-
-
-The reason not to use a proper password hashing algorithm
-I'm undecided about whether to use a prop
-Whether to use a proper password hashing algorithm such as PBKDF2 
-Should a proper password hashing algorithm be used, or is SHA-256 sufficient?
-
-This is a conservative choice to replace MD5. Alternatives including bcrypt, scrypt and Argon2 are no more widely established and don't offer significant benefits for the threat models that Oplop is mainly concerned with.
-What they all have in common is the ability to tune the difficulty, which is intended to be used over time in response to advances in computing.
-But this feature isn't helpful for Oplop2, because a change in any parameters will require a new version of Oplop that is not backward compatible (i.e. the same nickname and master password will produce a different result if these parameters are changed).
-So Oplop2 should choose difficulty parameters that will give some benefitare reasonable for today.
-
-which seeks to be finalized 
-Oplop2 has to choose 
-- PBKDF2 with HMAC-SHA-256
- - widespread standardized support in Ruby, JS, Python
-- bcrypt
-- scrypt
-- Argon2
-
-Steps:
+# Proposed steps for Oplop 2019
 
 - compute the digest from the nickname and master password
 - start with the first 12 characters of the digest
@@ -87,10 +57,17 @@ Steps:
 - replace a different random character with a random digit
 - replace a different random character with a random symbol
 
-# Note on choosing random values
+# References
 
-A simple pseudo-random number generator (PRNG) seeded with bytes from the digest is used to enforce the password policy constraints.
-The implementation is demonstrated to have a uniform distribution adequate for our purposes.
+https://github.com/brettcannon/oplop
+https://crypto.stackexchange.com/questions/3489/do-md5s-weaknesses-affect-oplop
+http://www.cs.utexas.edu/~bwaters/publications/papers/www2005.pdf
+https://gist.github.com/blixt/f17b47c62508be59987b
+
+
+
+
+
 
 # Process
 
