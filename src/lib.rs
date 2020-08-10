@@ -52,7 +52,8 @@ fn oplop() {
     let password = read_password_from_tty(Some("Enter master password:")).unwrap();
     let hash = oplop_hash(&nickname, &password);
     let password = oplop_password(&hash);
-    set_clipboard(&password);
+    //set_clipboard(&password);
+    println!("{}", password);
 }
 
 fn oplop_new() {
@@ -73,7 +74,8 @@ fn oplop_new() {
 
     let hash = oplop_hash(&nickname, &password);
     let password = oplop_password(&hash);
-    set_clipboard(&password);
+    //set_clipboard(&password);
+    println!("{}", password);
 }
 
 pub fn run(args: &[String]) {
